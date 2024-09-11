@@ -1,0 +1,45 @@
+services:
+  web:
+    build: .
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/src
+    depends_on:
+      - redis
+      - rabbitmq
+      - postgres
+
+  redis:
+    image: "redis:latest"
+    container_name: redis
+
+  rabbitmq:
+    image: "rabbitmq:latest"
+    container_name: rabitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  postgres:
+    image: "postgres:latest"
+    container_name: postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      # POSTGRES_HOST: ${DB_HOST}
+      # POSTGRES_PORT: ${DB_PORT}
+    ports:
+      - "5434:5432"
+
+  celery_worker:
+    build: .
+    container_name: celery_worker
+    command: celery -A task worker --log-level=info
+    depends_on:
+      - rabbitmq
+      - redis
