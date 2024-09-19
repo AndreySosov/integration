@@ -20,6 +20,10 @@ test:
 	@echo "Running tests..."
 	@docker-compose -exec -T $(CONTAINER_NAME) pytest
 
+myenv:
+	@echo "Runing virtual environment"
+	@source myenv/Scripts/activate
+
 help:
 	@echo "Makefile commands:"
 	@echo "  build    - Build the Docker image with no cache."

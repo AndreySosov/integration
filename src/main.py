@@ -3,6 +3,7 @@ from src.task import create_task
 from pydantic import BaseModel
 from datetime import date
 from src.bookings.router import router as router_bookings
+from src.hotels.router import router as router_hotels
 
 class Sooking(BaseModel):
     room_id: int
@@ -12,6 +13,7 @@ class Sooking(BaseModel):
 app = FastAPI()
 
 app.include_router(router_bookings)
+app.include_router(router_hotels)
 
 @app.get("/")
 async def root():
